@@ -15,13 +15,41 @@ import { useUIState } from '../contexts/UIStateContext.js';
 import { useFlickerDetector } from '../hooks/useFlickerDetector.js';
 import { useAlternateBuffer } from '../hooks/useAlternateBuffer.js';
 import { CopyModeWarning } from '../components/CopyModeWarning.js';
+import { useRef } from 'react';
+import { useKeypress, type Key } from '../hooks/useKeypress.js';
+import { keyMatchers, Command } from '../keyMatchers.js';
+import { type ScrollableListRef } from '../components/shared/ScrollableList.js';
 
 export const DefaultAppLayout: React.FC = () => {
   const uiState = useUIState();
   const isAlternateBuffer = useAlternateBuffer();
+  const scrollableListRef = useRef<ScrollableListRef<unknown>>(null);
 
   const { rootUiRef, terminalHeight } = uiState;
   useFlickerDetector(rootUiRef, terminalHeight);
+
+  useKeypress(
+    (key: Key) => {
+      if (
+        keyMatchers[Command.PAGE_UP_CTRL](key) ||
+        keyMatchers[Command.PAGE_DOWN_CTRL](key)
+      ) {
+        const direction = keyMatchers[Command.PAGE_UP_CTRL](key) ? -1 : 1;
+        const scrollState = scrollableListRef.current?.getScrollState();
+        if (scrollState) {
+          const { innerHeight } = scrollState;
+          scrollableListRef.current?.scrollBy(direction * innerHeight);
+        }
+      }
+    },
+    {
+      isActive:
+        !uiState.dialogsVisible &&
+        !uiState.customDialog &&
+        !uiState.embeddedShellFocused,
+    },
+  );
+
   // If in alternate buffer mode, need to leave room to draw the scrollbar on
   // the right side of the terminal.
   const width = isAlternateBuffer
@@ -31,13 +59,15 @@ export const DefaultAppLayout: React.FC = () => {
     <Box
       flexDirection="column"
       width={width}
-      height={isAlternateBuffer ? terminalHeight - 1 : undefined}
+      height={terminalHeight > 0 ? terminalHeight - 1 : undefined}
       flexShrink={0}
       flexGrow={0}
       overflow="hidden"
       ref={uiState.rootUiRef}
     >
-      <MainContent />
+      <Box flexGrow={1} overflow="hidden">
+        <MainContent ref={scrollableListRef} />
+      </Box>
 
       <Box
         flexDirection="column"

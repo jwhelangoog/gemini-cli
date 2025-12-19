@@ -39,6 +39,9 @@ describe('keyMatchers', () => {
     [Command.SCROLL_END]: (key: Key) => key.name === 'end',
     [Command.PAGE_UP]: (key: Key) => key.name === 'pageup',
     [Command.PAGE_DOWN]: (key: Key) => key.name === 'pagedown',
+    [Command.PAGE_UP_CTRL]: (key: Key) => key.name === 'pageup' && !!key.ctrl,
+    [Command.PAGE_DOWN_CTRL]: (key: Key) =>
+      key.name === 'pagedown' && !!key.ctrl,
     [Command.HISTORY_UP]: (key: Key) => key.ctrl && key.name === 'p',
     [Command.HISTORY_DOWN]: (key: Key) => key.ctrl && key.name === 'n',
     [Command.NAVIGATION_UP]: (key: Key) => key.name === 'up',

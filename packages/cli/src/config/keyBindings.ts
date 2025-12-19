@@ -32,6 +32,8 @@ export enum Command {
   SCROLL_END = 'scrollEnd',
   PAGE_UP = 'pageUp',
   PAGE_DOWN = 'pageDown',
+  PAGE_UP_CTRL = 'pageUpCtrl',
+  PAGE_DOWN_CTRL = 'pageDownCtrl',
 
   // History navigation
   HISTORY_UP = 'historyUp',
@@ -135,6 +137,8 @@ export const defaultKeyBindings: KeyBindingConfig = {
   [Command.SCROLL_END]: [{ key: 'end' }],
   [Command.PAGE_UP]: [{ key: 'pageup' }],
   [Command.PAGE_DOWN]: [{ key: 'pagedown' }],
+  [Command.PAGE_UP_CTRL]: [{ key: 'pageup', ctrl: true }],
+  [Command.PAGE_DOWN_CTRL]: [{ key: 'pagedown', ctrl: true }],
 
   // History navigation
   [Command.HISTORY_UP]: [{ key: 'p', ctrl: true, shift: false }],
@@ -258,6 +262,8 @@ export const commandCategories: readonly CommandCategory[] = [
       Command.SCROLL_END,
       Command.PAGE_UP,
       Command.PAGE_DOWN,
+      Command.PAGE_UP_CTRL,
+      Command.PAGE_DOWN_CTRL,
     ],
   },
   {
@@ -334,6 +340,8 @@ export const commandDescriptions: Readonly<Record<Command, string>> = {
   [Command.SCROLL_END]: 'Scroll to the bottom.',
   [Command.PAGE_UP]: 'Scroll up by one page.',
   [Command.PAGE_DOWN]: 'Scroll down by one page.',
+  [Command.PAGE_UP_CTRL]: 'Scroll up by one page.',
+  [Command.PAGE_DOWN_CTRL]: 'Scroll down by one page.',
   [Command.HISTORY_UP]: 'Show the previous entry in history.',
   [Command.HISTORY_DOWN]: 'Show the next entry in history.',
   [Command.NAVIGATION_UP]: 'Move selection up in lists.',
