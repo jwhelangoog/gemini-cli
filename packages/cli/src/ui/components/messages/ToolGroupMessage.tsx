@@ -115,7 +115,7 @@ export const ToolGroupMessage: React.FC<ToolGroupMessageProps> = ({
         // Use dense view if not verbose, not a shell tool (for interactivity), and not confirming (needs prompt)
         const useDenseView =
           !isVerboseMode &&
-          !isShellTool &&
+          !isShellToolCall &&
           tool.status !== ToolCallStatus.Confirming;
 
         if (useDenseView) {
