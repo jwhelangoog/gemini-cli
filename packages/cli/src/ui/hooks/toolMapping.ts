@@ -19,8 +19,7 @@ import {
   type IndividualToolCallDisplay,
 } from '../types.js';
 import { pruneShellOutput } from '../utils/textUtils.js';
-
-const MAX_OUTPUT_LINES_HISTORY = 10;
+import { SHELL_HISTORY_MAX_LINES } from '../constants.js';
 
 export function mapCoreStatusToDisplayStatus(
   coreStatus: CoreStatus,
@@ -124,8 +123,11 @@ export function mapToDisplay(
       ...baseDisplayProperties,
       status: mapCoreStatusToDisplayStatus(call.status),
       resultDisplay:
-        call.request.name === 'run_shell_command'
-          ? pruneShellOutput(resultDisplay, MAX_OUTPUT_LINES_HISTORY)
+        call.request.name === 'run_shell_command' &&
+        (call.status === 'success' ||
+          call.status === 'error' ||
+          call.status === 'cancelled')
+          ? pruneShellOutput(resultDisplay, SHELL_HISTORY_MAX_LINES)
           : resultDisplay,
       confirmationDetails,
       outputFile,
